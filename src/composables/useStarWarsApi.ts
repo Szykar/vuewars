@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline */
+/* eslint-disable object-curly-newline,function-paren-newline */
 import { computed, ComputedRef, Ref, ref } from 'vue';
 import { CharacterType } from '@/types/StarWarsTypes';
 import { usePagination } from '@/composables/usePagination';
@@ -13,11 +13,15 @@ const isNextPage = ref<boolean>(false);
 const isError = ref<boolean>(false);
 
 // eslint-disable-next-line import/prefer-default-export
-export const useStarWarsApi = (resource: 'people' = 'people'): {
+export const useStarWarsApi = (
+  resource: 'people' = 'people',
+  localStorage: Storage = window.localStorage,
+  fetchApi: (input: RequestInfo, init?: RequestInit) => Promise<Response> = window.fetch,
+): {
   fetchCharacters: () => void;
   currentPageCharacters: ComputedRef<Array<CharacterType>>;
-  pagesCount: ComputedRef<number>,
-  currentPage: Ref<number>,
+  pagesCount: ComputedRef<number>;
+  currentPage: Ref<number>;
   setPage: (page: number) => void;
   /* search */
   predicate: Ref<string>;
@@ -36,11 +40,11 @@ export const useStarWarsApi = (resource: 'people' = 'people'): {
   };
 
   const setStorage = (key: 'people' = 'people', value: Array<CharacterType>): void => {
-    window.localStorage.setItem(STORAGE_PREFIX.concat(key), JSON.stringify(value));
+    localStorage.setItem(STORAGE_PREFIX.concat(key), JSON.stringify(value));
   };
 
   const getStorage = (key: 'people' = 'people'): Array<CharacterType> => {
-    const storageValue = window.localStorage.getItem(STORAGE_PREFIX.concat(key));
+    const storageValue = localStorage.getItem(STORAGE_PREFIX.concat(key));
     if (!storageValue) {
       return [];
     }
@@ -57,7 +61,7 @@ export const useStarWarsApi = (resource: 'people' = 'people'): {
     }
 
     isProcessing.value = true;
-    fetch(`https://swapi.dev/api/${resource}/?page=${currentApiPage}`)
+    fetchApi(`https://swapi.dev/api/${resource}/?page=${currentApiPage}`)
       .then((res: Response) => res.json())
       .then(({
         count,
