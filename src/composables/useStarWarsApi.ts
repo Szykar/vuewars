@@ -30,11 +30,6 @@ export const useStarWarsApi = (
   isProcessing: Ref<boolean>;
   isError: Ref<boolean>;
 } => {
-  const {
-    currentPage,
-    setPage,
-  } = usePagination();
-
   const setPredicate = (event: Event) => {
     predicate.value = (<HTMLInputElement>event.target).value;
   };
@@ -90,16 +85,22 @@ export const useStarWarsApi = (
     .filter((character) => character.name.toLocaleLowerCase()
       .includes(predicate.value.toLocaleLowerCase())));
 
+  const itemsCount = computed(
+    () => filteredCharacters.value.length,
+  );
+
+  const {
+    currentPage,
+    pagesCount,
+    setPage,
+  } = usePagination(itemsCount, PAGE_SIZE);
+
   const currentPageCharacters = computed(
     () => {
       const offset = (currentPage.value - 1) * PAGE_SIZE;
 
       return filteredCharacters.value.slice(offset, offset + PAGE_SIZE);
     },
-  );
-
-  const pagesCount = computed(
-    () => Math.ceil(filteredCharacters.value.length / PAGE_SIZE),
   );
 
   return {
