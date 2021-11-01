@@ -1,5 +1,7 @@
 <template>
-  <h1>Star Wars characters</h1>
+  <div class="title">
+    <h1>Star Wars characters</h1>
+  </div>
   <div v-if="starWars.isError">Unfortunately, an error occurred :-(!</div>
   <div
     v-if="starWars.isProcessing"
@@ -77,8 +79,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #f6e422;
-  margin-top: 40px;
   font-size: 18px;
+}
+
+.title {
+  transform: perspective(400px) rotateX(45deg);
+  width: 300px;
+  margin: auto;
+  color: #1d1d70;
+  text-shadow: 0 0 5px #f6e422;
+
+  h1 {
+    font-size: 50px;
+  }
 }
 
 .star {
