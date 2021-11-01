@@ -1,10 +1,10 @@
 import { shallowMount } from '@vue/test-utils';
 import SearchBox from '@/components/SearchBox.vue';
-import { useStarWarsApi } from '@/composables/useStarWarsApi';
+import { usePredicate } from '@/composables/usePredicate';
 
 describe('SearchBox.vue', () => {
   it('should update predicate state on input event', async () => {
-    const { predicate } = useStarWarsApi();
+    const { predicate } = usePredicate();
     expect(predicate.value)
       .toEqual('');
 

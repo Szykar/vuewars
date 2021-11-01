@@ -2,12 +2,12 @@
 import { computed, ComputedRef, Ref, ref } from 'vue';
 import { CharacterType } from '@/types/StarWarsTypes';
 import { usePagination } from '@/composables/usePagination';
+import { usePredicate } from '@/composables/usePredicate';
 
 const STORAGE_PREFIX = 'STAR_WARS_';
 const PAGE_SIZE = 10;
 
 const resourceCount = ref<number>(0);
-const predicate = ref<string>('');
 const isProcessing = ref<boolean>(false);
 const isNextPage = ref<boolean>(false);
 const isError = ref<boolean>(false);
@@ -23,17 +23,10 @@ export const useStarWarsApi = (
   pagesCount: ComputedRef<number>;
   currentPage: Ref<number>;
   setPage: (page: number) => void;
-  /* search */
-  predicate: Ref<string>;
-  setPredicate: (event: Event) => void;
   /* api client state */
   isProcessing: Ref<boolean>;
   isError: Ref<boolean>;
 } => {
-  const setPredicate = (event: Event) => {
-    predicate.value = (<HTMLInputElement>event.target).value;
-  };
-
   const setStorage = (key: 'people' = 'people', value: Array<CharacterType>): void => {
     localStorage.setItem(STORAGE_PREFIX.concat(key), JSON.stringify(value));
   };
@@ -81,6 +74,8 @@ export const useStarWarsApi = (
       });
   };
 
+  const { predicate } = usePredicate();
+
   const filteredCharacters = computed(() => getStorage(resource)
     .filter((character) => character.name.toLocaleLowerCase()
       .includes(predicate.value.toLocaleLowerCase())));
@@ -109,8 +104,6 @@ export const useStarWarsApi = (
     pagesCount,
     currentPage,
     setPage,
-    predicate,
-    setPredicate,
     isProcessing,
     isError,
   };

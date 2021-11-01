@@ -4,21 +4,21 @@
       type="text"
       placeholder="Start typing please"
       v-model="starWars.predicate"
-      @change="starWars.setPredicate"
+      @change="starWars.setPredicate($event.target.value)"
     >
   </div>
 </template>
 
 <script lang="ts">
 import { setup, Vue } from 'vue-class-component';
-import { useStarWarsApi } from '@/composables/useStarWarsApi';
+import { usePredicate } from '@/composables/usePredicate';
 
 export default class SearchBox extends Vue {
   starWars = setup(() => {
     const {
       predicate,
       setPredicate,
-    } = useStarWarsApi();
+    } = usePredicate();
 
     return {
       predicate,
